@@ -36,17 +36,17 @@ class UserModel {
   }
 
   // Create a User object from a Map (Firestore snapshot)
-  factory UserModel.fromMap(Map<String, dynamic> map, String id) {
-    return UserModel(
-      id: id,
-      name: map['name'] ?? '',
-      email: map['email'] ?? '',
-      dob: map['dob'] ?? '',
-      phone: map['phone'] ?? '',
-      city: map['city'] ?? '',
-      profileImage: map['profileImage'] ?? '',
-      gender: map['gender'] ?? '',
-      role: map['role'] ?? ''
-    );
-  }
+    factory UserModel.fromMap(Map<String, dynamic> map, String id) {
+      return UserModel(
+        id: id,
+        name: map['name'] ?? '',
+        email: map['email'] ?? '',
+        dob: map['dob'] ?? '',
+        phone: map['phone'] ?? '',
+        city: map['city'] ?? '',
+        profileImage: map['profileImage'] ?? '',
+        gender: map['gender'] ?? '',
+        role: map['role'] ?? ''
+      );
+    }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+import 'package:tour_aid/utils/userProvider.dart';
 import 'firebase_options.dart';
 import 'package:tour_aid/screens/splash.dart';
 
@@ -10,7 +12,12 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(const MyApp());
+  runApp(
+      ChangeNotifierProvider(
+        create: (_) => UserProvider(),
+        child: MyApp(),
+      ),
+  );
 }
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

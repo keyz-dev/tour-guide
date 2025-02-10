@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:tour_aid/services/cloudinary.dart';
 
 import '../models/user.dart';
 
@@ -24,7 +25,7 @@ class AuthService {
     required String city,
     required String dob,
     required String gender,
-    required File? profileImage,
+    required String profileImage,
   }) async {
     try {
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
@@ -32,13 +33,7 @@ class AuthService {
         password: password,
       );
       // set the role
-      String role = 'admin';
-      // Upload profile picture
-      String? profilePicUrl;
-      if (profileImage != null) {
-        profilePicUrl = await uploadProfilePicture(userCredential.user!.uid, profileImage);
-      }
-
+      String role = 'user';
       // Create user model
       UserModel user = UserModel(
         id: userCredential.user!.uid,
@@ -48,7 +43,7 @@ class AuthService {
         dob: dob,
         gender: gender,
         role: role,
-        profileImage: profilePicUrl,
+        profileImage: profileImage,
         city: city,
       );
 
@@ -61,22 +56,38 @@ class AuthService {
     }
   }
 
-  // Upload Profile Picture
-  Future<String> uploadProfilePicture(String userId, File image) async {
-    Reference ref = _storage.ref().child('profile_pictures/$userId.jpg');
-    await ref.putFile(image);
-    return await ref.getDownloadURL();
-  }
-
-  // Sign-in user
-  Future<String?> loginUser({required String email, required String password}) async {
+  /// Signs in the user using Firebase Authentication.
+  Future<User?> signInWithEmailPassword(String email, String password) async {
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
-      return null; // Success
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      return userCredential.user;
     } catch (e) {
-      return e.toString();
+      return null;
     }
   }
+
+  Future<UserModel?> fetchUserModel(String uid) async {
+    try {
+      DocumentSnapshot userDoc =
+      await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      // Check if the document exists
+      if (userDoc.exists) {
+        // Convert the document data to a map
+        Map<String, dynamic> data = userDoc.data() as Map<String, dynamic>;
+        // Use your fromMap factory to create an instance of UserModel
+        UserModel user = UserModel.fromMap(data, userDoc.id);
+        return user;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// Fetches the complete user model from Firestore.
+
   // Sign-out user
   Future<void> logoutUser() async {
     await _auth.signOut();

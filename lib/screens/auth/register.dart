@@ -9,6 +9,7 @@ import 'package:tour_aid/utils/colors.dart';
 import 'package:tour_aid/utils/userValidator.dart';
 import '../../components/text_field.dart';
 import '../../services/auth.dart';
+import '../../services/cloudinary.dart';
 import 'login.dart';
 
 class Register extends StatefulWidget {
@@ -32,26 +33,50 @@ class _RegisterState extends State<Register> {
   XFile? _image;
   String gender = 'Male';
   DateTime? _selectedDate;
+  bool _isLoading = false;
 
   // Method that handles the registration
   void register() async {
-    if (_formKey.currentState!.validate()) {
-      String? error = await AuthService().registerUser(
-        name: _nameController.text.trim(),
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-        phone: _phoneController.text.trim(),
-        city: _cityController.text.trim(),
-        dob: _dobController.text.trim(),
-        gender: gender,
-        profileImage: _profileImage,
-      );
+    setState(() {
+      _isLoading = true;
+    });
 
-      if (error == null) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Registration Successful")));
-        Navigator.pop(context);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+    if (_formKey.currentState!.validate()) {
+
+      // Upload profile picture to cloudinary
+      String? profilePicUrl;
+      String? error;
+      try{
+        if (_profileImage != null) {
+          var uploadResult = await CloudinaryService().uploadImage(_profileImage!, imagePath: "profile_images");
+          if(uploadResult['success'] ==  false){
+            throw Exception(uploadResult['value']);
+          }
+            profilePicUrl = uploadResult['value'];
+        }
+        error = await AuthService().registerUser(
+          name: _nameController.text.trim(),
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+          phone: _phoneController.text.trim(),
+          city: _cityController.text.trim(),
+          dob: _dobController.text.trim(),
+          gender: gender,
+          profileImage: profilePicUrl!,
+        );
+
+        setState(() {
+          _isLoading = false;
+        });
+
+        if (error == null) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Registration Successful")));
+          Navigator.pop(context);
+        } else {
+          throw Exception(error);
+        }
+      }catch (e){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
       }
     }
   }
@@ -123,11 +148,12 @@ class _RegisterState extends State<Register> {
                         const SizedBox(height: 15),
                         MyTextField(
                           hintText: "Enter your phone number",
-                          labelText: "Phone Number",
+                          labelText: "Phone Number (+237)",
                           icon: Icons.phone,
                           keyboardType: TextInputType.phone,
                           controller: _phoneController,
                           fillColor: AppColors.indicatorInActive,
+                          validator: (value) => value!.length != 9 ? 'Phone number must be 9 digits' : null,
                         ),
                         const SizedBox(height: 15),
                         Row(
@@ -186,7 +212,6 @@ class _RegisterState extends State<Register> {
                           obscureText: true,
                           controller: _passwordController,
                           validator: (value) => value!.length < 5 ? 'password too short': null,
-                          onSaved: (value)=> _password = value,
                           fillColor: AppColors.indicatorInActive,
                         ),
                         const SizedBox(height: 15),
@@ -197,7 +222,8 @@ class _RegisterState extends State<Register> {
                           icon: Icons.lock,
                           controller: _cPasswordController,
                           fillColor: AppColors.indicatorInActive,
-                          validator: (value) => (value != _password) ? 'passwords do not match': null,
+                          validator: (value) {
+                            return (value != _passwordController.text) ? 'passwords do not match': null; },
                         ),
                         const SizedBox(height: 15,),
                         GestureDetector(
@@ -218,6 +244,22 @@ class _RegisterState extends State<Register> {
 
                         const SizedBox(height: 20),
                         //   Submit button
+                        _isLoading ?
+                        MyElevatedButton(
+                          onPressed: () {},
+                          radius: 5.0,
+                          width: double.infinity,
+                          backgroundColor: AppColors.indicatorActive,
+                          child: SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              color: AppColors.primaryWhite,
+                              strokeWidth: 3,
+                            ),
+                          )
+                        )
+                            :
                         MyElevatedButton(
                           onPressed: register,
                           radius: 5.0,
