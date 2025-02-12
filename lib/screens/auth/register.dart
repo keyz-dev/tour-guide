@@ -40,9 +40,8 @@ class _RegisterState extends State<Register> {
     setState(() {
       _isLoading = true;
     });
-
     if (_formKey.currentState!.validate()) {
-
+      
       // Upload profile picture to cloudinary
       String? profilePicUrl;
       String? error;
@@ -68,7 +67,6 @@ class _RegisterState extends State<Register> {
         setState(() {
           _isLoading = false;
         });
-
         if (error == null) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Registration Successful")));
           Navigator.pop(context);

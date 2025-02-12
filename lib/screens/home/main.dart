@@ -37,73 +37,82 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       body: PageStorage(bucket: bucket, child: currentScreen),
-      bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        notchMargin: 10,
-        child: Container(
-          height: 45,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              buildNavBarItem(Icons.home, Dashboard(), 'Home', 0),
-              buildNavBarItem(Icons.explore, ExploreScreen(), 'Explore', 1),
-              SizedBox(width: isAdmin ? 20 : 0),
-              buildNavBarItem(Icons.favorite, FavoritesScreen(), 'Favorites', 3),
-              buildNavBarItem(Icons.person, ProfileScreen(), 'Profile', 4),
-            ]
-          ),
-        ),
-      ),
-      floatingActionButton: isAdmin ? ClipOval(
-        child: Material(
-          color: AppColors.primaryBlue,
-          elevation: 10,
-          child: InkWell(
-            onTap: (){
-              setState(() {
-                currentScreen = AddAttractionScreen();
-                currentTab = 2;
-              });
-            },
-            child: SizedBox(
-              width: 56,
-              height: 56,
-              child: Icon(
-                Icons.add_circle_outline,
-                size: 28,
-                color: AppColors.primaryWhite,
+      bottomNavigationBar: currentTab == 2
+          ? null
+          : BottomAppBar(
+              shape: CircularNotchedRectangle(),
+              notchMargin: 10,
+              child: Container(
+                height: 45,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      buildNavBarItem(Icons.home, Dashboard(), 'Home', 0),
+                      buildNavBarItem(
+                          Icons.explore, ExploreScreen(), 'Explore', 1),
+                      SizedBox(width: isAdmin ? 20 : 0),
+                      buildNavBarItem(
+                          Icons.favorite, FavoritesScreen(), 'Favorites', 3),
+                      buildNavBarItem(
+                          Icons.person, ProfileScreen(), 'Profile', 4),
+                    ]),
               ),
             ),
-          ),
-        ),
-      ): null,
+      floatingActionButton: isAdmin && currentTab != 2
+          ? ClipOval(
+              child: Material(
+                color: AppColors.primaryBlue,
+                elevation: 10,
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      currentScreen = AddAttractionScreen();
+                      currentTab = 2;
+                    });
+                  },
+                  child: SizedBox(
+                    width: 56,
+                    height: 56,
+                    child: Icon(
+                      Icons.add_circle_outline,
+                      size: 28,
+                      color: AppColors.primaryWhite,
+                    ),
+                  ),
+                ),
+              ),
+            )
+          : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
-  Widget buildNavBarItem(IconData icon, Widget screen, String label, int index){
+  Widget buildNavBarItem(
+      IconData icon, Widget screen, String label, int index) {
     return MaterialButton(
-        onPressed: (){
-          setState(() {
-            currentScreen = screen;
-            currentTab = index;
-          });
-        },
-        minWidth: 40,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-                icon,
-                color: currentTab == index ? AppColors.primaryBlue : AppColors.primaryGrey
-            ),
-            MyText(
-              text: label,
-              color: currentTab == index ? AppColors.primaryBlue : AppColors.primaryGrey,
-              size: 15 ,
-            )
-          ],
-        ),
+      onPressed: () {
+        setState(() {
+          currentScreen = screen;
+          currentTab = index;
+        });
+      },
+      minWidth: 40,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon,
+              color: currentTab == index
+                  ? AppColors.primaryBlue
+                  : AppColors.primaryGrey),
+          MyText(
+            text: label,
+            color: currentTab == index
+                ? AppColors.primaryBlue
+                : AppColors.primaryGrey,
+            size: 15,
+          )
+        ],
+      ),
     );
   }
 }

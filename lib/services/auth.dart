@@ -1,11 +1,6 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:tour_aid/services/cloudinary.dart';
-
 import '../models/user.dart';
 
 class AuthService {
@@ -14,7 +9,6 @@ class AuthService {
   //   For authentication
   final FirebaseAuth _auth = FirebaseAuth.instance;
   // for file storage
-  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   //Signup the user
   Future<String?> registerUser({
@@ -28,7 +22,8 @@ class AuthService {
     required String profileImage,
   }) async {
     try {
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -70,7 +65,7 @@ class AuthService {
   Future<UserModel?> fetchUserModel(String uid) async {
     try {
       DocumentSnapshot userDoc =
-      await FirebaseFirestore.instance.collection('users').doc(uid).get();
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
       // Check if the document exists
       if (userDoc.exists) {
         // Convert the document data to a map
@@ -86,12 +81,8 @@ class AuthService {
     }
   }
 
-  /// Fetches the complete user model from Firestore.
-
   // Sign-out user
   Future<void> logoutUser() async {
     await _auth.signOut();
   }
 }
-
-

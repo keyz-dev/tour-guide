@@ -41,7 +41,7 @@ class MyTextField extends StatelessWidget {
     this.borderRadius,
     this.enabled = true,
     this.readOnly = false,
-    required this.icon,
+    this.icon,
     this.hasBorder = false
   });
   @override
