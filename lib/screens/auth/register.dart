@@ -64,9 +64,6 @@ class _RegisterState extends State<Register> {
           profileImage: profilePicUrl!,
         );
 
-        setState(() {
-          _isLoading = false;
-        });
         if (error == null) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Registration Successful")));
           Navigator.pop(context);
@@ -75,6 +72,11 @@ class _RegisterState extends State<Register> {
         }
       }catch (e){
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+      }finally {
+        // terminate the loading bar
+        setState(() {
+          _isLoading = false;
+        });
       }
     }
   }

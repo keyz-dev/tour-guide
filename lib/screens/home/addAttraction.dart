@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -61,6 +60,13 @@ class _AddAttractionScreenState extends State<AddAttractionScreen> {
     });
 
     try {
+      // Verify if the form is validated
+      if (!_formKey.currentState!.validate())
+        throw Exception("Form data isn't valid");
+
+      // save the form data in the onSaved fields
+      _formKey.currentState!.save();
+
       // upload primary image to cloudinary and save the url
       if (_primaryImage != null) {
         var uploadResult = await CloudinaryService()
@@ -83,37 +89,27 @@ class _AddAttractionScreenState extends State<AddAttractionScreen> {
           _attractionSite.additionalImages.add(uploadResult['value']);
         }
       }
+      var result =
+          await AttractionService().createAttractionSite(_attractionSite);
 
-      print(_attractionSite.primaryImage);
-      print(_attractionSite.additionalImages);
+      // Verify creation and display message accordingly
+      if (result != null) throw Exception(result);
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Attraction site added!')));
+      _formKey.currentState!.reset();
+      setState(() {
+        _primaryImage = null;
+        _additionalImages.clear();
+      });
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.toString())));
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
-
-    // if (_formKey.currentState!.validate()) {
-    //   _formKey.currentState!.save();
-    //   var result =
-    //       await AttractionService().createAttractionSite(_attractionSite);
-
-    //   // Verify creation
-    //   if (result != null) {
-    //     ScaffoldMessenger.of(context)
-    //         .showSnackBar(SnackBar(content: Text(result)));
-    //     return;
-    //   }
-    //   ScaffoldMessenger.of(context)
-    //       .showSnackBar(SnackBar(content: Text('Attraction site added!')));
-    //   _formKey.currentState!.reset();
-    //   setState(() {
-    //     _primaryImage = null;
-    //     _additionalImages.clear();
-    //   });
-    // }
-
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   @override
