@@ -65,7 +65,7 @@ class _AttractionSitesDisplayState extends State<AttractionSitesDisplay>
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              AttractionDetail(siteId: site.id),
+                              AttractionDetail(site: site),
                         ),
                       );
                     },
