@@ -1,24 +1,60 @@
 import 'package:flutter/material.dart';
-import 'package:tour_aid/components/elevated_button.dart';
 import 'package:tour_aid/components/my_text.dart';
-import 'package:tour_aid/models/attraction.dart';
 import 'package:tour_aid/screens/home/explore.dart';
+import 'package:tour_aid/screens/home/image_screen.dart';
 import 'package:tour_aid/utils/colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AttractionDetail extends StatelessWidget {
+  // ignore: prefer_typing_uninitialized_variables
   final site;
 
-  AttractionDetail({required this.site});
+  const AttractionDetail({super.key, required this.site});
+
+  // Function to launch the URL
 
   @override
   Widget build(BuildContext context) {
+    // Opens a URL in the external browser
+
+    Future<void> _launchURL(String urlString) async {
+      try {
+        final Uri url = Uri.parse(urlString);
+        if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+          throw 'Could not launch $urlString';
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
+      }
+    }
+
+    // Launches the phone dialer with a prefilled number
+    Future<void> _makePhoneCall(String phoneNumber) async {
+      try {
+        final Uri phoneUri = Uri(
+          scheme: 'tel',
+          path: phoneNumber,
+        );
+        if (!await launchUrl(phoneUri)) {
+          throw 'Could not launch $phoneUri';
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
+      }
+    }
+
     // Sample data for demonstration.
     final String imageUrl = site['primaryImage'];
     final String name = site['name'];
+    final String town = site['town'];
+    final int rating = site['rating'];
     final String description = site['description'];
     final String website = site['websiteUrl'];
     final String phoneNumber = site['phoneNumber'];
     final additionalImages = site['additionalImages'];
+
     return Scaffold(
       body: Column(children: [
         Container(
@@ -67,38 +103,133 @@ class AttractionDetail extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               color: Colors.white,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 20,
                 children: [
-                  // Name
-                  Text(
-                    name,
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  Column(
+                    spacing: 8,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Name
+                      MyText(
+                        text: name,
+                        size: 28,
+                        weight: FontWeight.w700,
+                      ),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              spacing: 8,
+                              children: [
+                                Icon(
+                                  Icons.location_on,
+                                  size: 18,
+                                  color: Colors.redAccent[400],
+                                ),
+                                MyText(
+                                  text: town,
+                                  size: 18,
+                                  color: Colors.grey,
+                                )
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              spacing: 8,
+                              children: [
+                                Icon(Icons.star,
+                                    color: Colors.yellow, size: 14),
+                                MyText(
+                                    text: rating.toString(),
+                                    color: AppColors.primaryGrey,
+                                    size: 14,
+                                    weight: FontWeight.bold),
+                              ],
+                            )
+                          ]),
+                    ],
                   ),
-                  SizedBox(height: 8),
+
                   // Description
-                  Text(
-                    description,
-                    style: TextStyle(fontSize: 16),
+
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 8,
+                    children: [
+                      MyText(
+                        text: "Description",
+                        size: 18,
+                        weight: FontWeight.w700,
+                      ),
+                      MyText(
+                        text: description,
+                        size: 16,
+                        height: 1.8,
+                        color: const Color.fromARGB(255, 127, 125, 125),
+                      )
+                    ],
                   ),
-                  SizedBox(height: 8),
+
                   // Website URL
-                  Text(
-                    "Website: $website",
-                    style: TextStyle(fontSize: 16, color: Colors.blue),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    spacing: 8,
+                    children: [
+                      MyText(
+                        text: "Website:",
+                        size: 18,
+                        weight: FontWeight.w700,
+                      ),
+                      website == ''
+                          ? MyText(
+                              text: 'not available',
+                              size: 18,
+                            )
+                          : GestureDetector(
+                              onTap: () => _launchURL(website),
+                              child: MyText(
+                                text: website,
+                                size: 18,
+                                color: AppColors.indicatorActive,
+                              )),
+                    ],
                   ),
-                  SizedBox(height: 8),
                   // Phone number
-                  Text(
-                    "Phone: $phoneNumber",
-                    style: TextStyle(fontSize: 16),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    spacing: 8,
+                    children: [
+                      MyText(
+                        text: "Phone:",
+                        size: 18,
+                        weight: FontWeight.w700,
+                      ),
+                      phoneNumber == ''
+                          ? MyText(
+                              text: 'not available',
+                              size: 18,
+                            )
+                          : GestureDetector(
+                              onTap: () => _makePhoneCall(phoneNumber),
+                              child: MyText(
+                                text: phoneNumber,
+                                size: 18,
+                                color: AppColors.indicatorActive,
+                              )),
+                    ],
                   ),
-                  SizedBox(height: 16),
+
                   // Additional images
                   Text(
-                    "Additional Images",
+                    "Better View",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 8),
                   // Horizontal scrollable list of additional images
                   SizedBox(
                     height: 100, // Set a fixed height for the horizontal list
@@ -106,30 +237,43 @@ class AttractionDetail extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       itemCount: additionalImages.length,
                       itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: Container(
-                            width: 100, // Set a fixed width for the containers
-                            padding: const EdgeInsets.all(
-                                4.0), // Padding inside the container
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(
-                                  8.0), // Optional: Rounded corners
-                              color: Colors.grey[
-                                  200], // Background color for the container
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                  8.0), // Match with the container
-                              child: Image.network(
-                                additionalImages[index],
-                                width: double.infinity, // Fill the container
-                                fit: BoxFit
-                                    .cover, // Ensure the image covers the area
+                        return GestureDetector(
+                            onTap: () {
+                              // Navigate to the full-screen image when tapped
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => FullImageScreen(
+                                      imageUrl: additionalImages[index]),
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: Container(
+                                width:
+                                    100, // Set a fixed width for the containers
+                                padding: const EdgeInsets.all(
+                                    4.0), // Padding inside the container
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      8.0), // Optional: Rounded corners
+                                  color: Colors.grey[
+                                      200], // Background color for the container
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(
+                                      8.0), // Match with the container
+                                  child: Image.network(
+                                    additionalImages[index],
+                                    width:
+                                        double.infinity, // Fill the container
+                                    fit: BoxFit
+                                        .cover, // Ensure the image covers the area
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        );
+                            ));
                       },
                     ),
                   ),
@@ -138,33 +282,39 @@ class AttractionDetail extends StatelessWidget {
             ),
           ),
         ),
-      ]),
-      // Content below the image
-      // Primary image that takes half of the screen
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigate to the map page with location details
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ExploreScreen(
-                  site: site), // Replace with your actual MapPage widget
+        Positioned(
+          bottom: 24, // Adjust for margin at the bottom
+          left: 16, // Left margin
+          right: 16, // Right margin
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(8), // Full width
+            child: TextButton(
+              onPressed: () {
+                // Navigate to the map page with location details
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ExploreScreen(site: site),
+                  ),
+                );
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: AppColors.indicatorActive,
+                textStyle: TextStyle(fontSize: 18), // Text style
+              ),
+              child: Center(
+                child: MyText(
+                  text: "Locate Now",
+                  color: AppColors.primaryWhite,
+                  weight: FontWeight.w600,
+                  size: 20,
+                ), // Button text
+              ),
             ),
-          );
-        },
-        child: MyElevatedButton(
-          onPressed: () {},
-          radius: 5.0,
-          width: double.infinity,
-          backgroundColor: AppColors.indicatorActive,
-          child: MyText(
-              text: 'Locate on Map',
-              color: AppColors.primaryWhite,
-              weight: FontWeight.w600,
-              align: TextAlign.center,
-              size: 17),
+          ),
         ),
-      ),
+      ]),
     );
   }
 }
