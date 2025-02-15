@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tour_aid/screens/get_started.dart';
 import 'package:tour_aid/screens/home/main.dart';
-
 import '../../utils/userProvider.dart';
-import 'dashboard.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});

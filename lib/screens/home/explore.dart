@@ -15,8 +15,9 @@ class ExploreScreen extends StatefulWidget {
 
 class _ExploreScreenState extends State<ExploreScreen> {
   late Completer<GoogleMapController> _mapController = Completer();
+  // Set the target region to the center
   final CameraPosition _center = CameraPosition(
-    target: LatLng(45.521563, -122.677433),
+    target: LatLng(3.78, 11.52),
     zoom: 11.0,
   );
   final List<Marker> _markers = [];

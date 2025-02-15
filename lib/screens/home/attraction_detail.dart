@@ -67,6 +67,7 @@ class AttractionDetail extends StatelessWidget {
             );
           },
         );
+        Navigator.pop(context);
       }
     }
 

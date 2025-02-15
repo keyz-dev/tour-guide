@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tour_aid/models/attraction.dart';
 import 'package:tour_aid/screens/home/attraction_detail.dart';
 import 'package:tour_aid/services/attractions.dart';
