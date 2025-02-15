@@ -1,0 +1,41 @@
+[33mcommit c65846c8a4008115a1607b2f7c6791b0aecffe62[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: keyz-dev <calkeyz0313@gmail.com>
+Date:   Sat Feb 15 10:57:47 2025 +0100
+
+    beginning to add the mapping service
+
+[33mcommit 9004755a3c98a2ceb2411d5007d6afcdeabd2b13[m
+Author: keyz-dev <calkeyz0313@gmail.com>
+Date:   Fri Feb 14 10:09:15 2025 +0100
+
+    working on the attraction_details page
+
+[33mcommit f30e10fd2f9a1dc012ca2ba52ebbd298512ddeff[m
+Author: keyz-dev <calkeyz0313@gmail.com>
+Date:   Thu Feb 13 15:02:09 2025 +0100
+
+    working on the main page to display the sites
+
+[33mcommit b71bfeec9ecbd5cff9861c39a345db0700029525[m
+Author: keyz-dev <calkeyz0313@gmail.com>
+Date:   Wed Feb 12 18:55:47 2025 +0100
+
+    working on adding images
+
+[33mcommit 0b4dd9d7a0a21ab67ee3b5da41bcab4601d02128[m
+Author: keyz-dev <calkeyz0313@gmail.com>
+Date:   Mon Feb 10 19:57:45 2025 +0100
+
+    added the bottom nav bar
+
+[33mcommit d2f78f596d0e667362a3ddf39ed48738b0d0259a[m
+Author: keyz-dev <calkeyz0313@gmail.com>
+Date:   Mon Feb 10 19:20:01 2025 +0300
+
+    commencing the home page
+
+[33mcommit 6481dda965761ee73bd4c0604ad64fe956cbc01e[m
+Author: keyz-dev <calkeyz0313@gmail.com>
+Date:   Mon Feb 10 13:42:09 2025 +0300
+
+    initial commit, made at the user registration level

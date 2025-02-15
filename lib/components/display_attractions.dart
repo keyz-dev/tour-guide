@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tour_aid/models/attraction.dart';
 import 'package:tour_aid/screens/home/attraction_detail.dart';
+import 'package:tour_aid/services/attractions.dart';
 
 class AttractionSitesDisplay extends StatefulWidget {
   const AttractionSitesDisplay({super.key});
@@ -20,7 +20,7 @@ class _AttractionSitesDisplayState extends State<AttractionSitesDisplay>
     'Museums',
     'Restaurants'
   ]; // Example categories
-  List<DocumentSnapshot> attractionSites = [];
+  List<AttractionSite> attractionSites = [];
 
   @override
   void initState() {
@@ -36,10 +36,11 @@ class _AttractionSitesDisplayState extends State<AttractionSitesDisplay>
   }
 
   Future<void> fetchAttractionSites() async {
-    final QuerySnapshot snapshot =
-        await FirebaseFirestore.instance.collection('attraction_sites').get();
+    final ListOfAttractionSites =
+        await AttractionService().fetchAttractionSites();
+
     setState(() {
-      attractionSites = snapshot.docs;
+      attractionSites = ListOfAttractionSites;
     });
   }
 
@@ -64,8 +65,7 @@ class _AttractionSitesDisplayState extends State<AttractionSitesDisplay>
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              AttractionDetail(site: site),
+                          builder: (context) => AttractionDetail(site: site),
                         ),
                       );
                     },
@@ -83,8 +83,7 @@ class _AttractionSitesDisplayState extends State<AttractionSitesDisplay>
                               borderRadius: BorderRadius.circular(
                                   8.0), // Optional: add rounded corners
                               child: Image.network(
-                                site[
-                                    'primaryImage'], // Assuming 'imageUrl' is the field name
+                                site.primaryImage, // Assuming 'imageUrl' is the field name
                                 height: 150, // Set your preferred height
                                 width: double.infinity,
                                 fit: BoxFit
@@ -96,7 +95,7 @@ class _AttractionSitesDisplayState extends State<AttractionSitesDisplay>
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              site['name'], // Assuming 'name' is the field name
+                              site.name, // Assuming 'name' is the field name
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -108,8 +107,7 @@ class _AttractionSitesDisplayState extends State<AttractionSitesDisplay>
                             padding:
                                 const EdgeInsets.only(left: 8.0, bottom: 8.0),
                             child: Text(
-                              site[
-                                  'categoryName'], // Assuming 'categoryName' is the field name
+                              site.categoryName,
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey,

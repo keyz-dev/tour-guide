@@ -15,4 +15,14 @@ class AttractionService {
       return e.toString();
     }
   }
+
+  Future<List<AttractionSite>> fetchAttractionSites() async {
+    final QuerySnapshot snapshot =
+        await FirebaseFirestore.instance.collection('attraction_sites').get();
+    List<AttractionSite> attractionSites = snapshot.docs.map((doc) {
+      return AttractionSite.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+    }).toList();
+
+    return attractionSites;
+  }
 }

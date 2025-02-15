@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:tour_aid/components/my_text.dart';
+import 'package:tour_aid/models/attraction.dart';
 import 'package:tour_aid/screens/home/explore.dart';
 import 'package:tour_aid/screens/home/image_screen.dart';
 import 'package:tour_aid/utils/colors.dart';
@@ -7,7 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class AttractionDetail extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
-  final site;
+  final AttractionSite site;
 
   const AttractionDetail({super.key, required this.site});
 
@@ -29,6 +31,45 @@ class AttractionDetail extends StatelessWidget {
       }
     }
 
+    Future<void> _launchMap() async {
+      // Check for location permission
+      var status = await Permission.location.status;
+
+      if (status.isDenied) {
+        // Request permission
+        status = await Permission.location.request();
+      }
+
+      if (status.isGranted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ExploreScreen(site: site),
+          ),
+        );
+      } else {
+        // Show an alert dialog
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Location Permission Required'),
+              content:
+                  Text('Please enable location permission to view the map'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
+
     // Launches the phone dialer with a prefilled number
     Future<void> _makePhoneCall(String phoneNumber) async {
       try {
@@ -45,15 +86,7 @@ class AttractionDetail extends StatelessWidget {
       }
     }
 
-    // Sample data for demonstration.
-    final String imageUrl = site['primaryImage'];
-    final String name = site['name'];
-    final String town = site['town'];
-    final int rating = site['rating'];
-    final String description = site['description'];
-    final String website = site['websiteUrl'];
-    final String phoneNumber = site['phoneNumber'];
-    final additionalImages = site['additionalImages'];
+    final additionalImages = site.additionalImages;
 
     return Scaffold(
       body: Column(children: [
@@ -62,7 +95,7 @@ class AttractionDetail extends StatelessWidget {
           child: Stack(
             children: [
               Image.network(
-                imageUrl,
+                site.primaryImage,
                 width: double.infinity,
                 height: double.infinity,
                 fit: BoxFit.cover,
@@ -114,7 +147,7 @@ class AttractionDetail extends StatelessWidget {
                     children: [
                       // Name
                       MyText(
-                        text: name,
+                        text: site.name,
                         size: 28,
                         weight: FontWeight.w700,
                       ),
@@ -131,7 +164,7 @@ class AttractionDetail extends StatelessWidget {
                                   color: Colors.redAccent[400],
                                 ),
                                 MyText(
-                                  text: town,
+                                  text: site.town,
                                   size: 18,
                                   color: Colors.grey,
                                 )
@@ -144,7 +177,7 @@ class AttractionDetail extends StatelessWidget {
                                 Icon(Icons.star,
                                     color: Colors.yellow, size: 14),
                                 MyText(
-                                    text: rating.toString(),
+                                    text: site.rating.toString(),
                                     color: AppColors.primaryGrey,
                                     size: 14,
                                     weight: FontWeight.bold),
@@ -167,7 +200,7 @@ class AttractionDetail extends StatelessWidget {
                         weight: FontWeight.w700,
                       ),
                       MyText(
-                        text: description,
+                        text: site.description,
                         size: 16,
                         height: 1.8,
                         color: const Color.fromARGB(255, 127, 125, 125),
@@ -185,15 +218,15 @@ class AttractionDetail extends StatelessWidget {
                         size: 18,
                         weight: FontWeight.w700,
                       ),
-                      website == ''
+                      site.websiteUrl == ''
                           ? MyText(
                               text: 'not available',
                               size: 18,
                             )
                           : GestureDetector(
-                              onTap: () => _launchURL(website),
+                              onTap: () => _launchURL(site.websiteUrl!),
                               child: MyText(
-                                text: website,
+                                text: site.websiteUrl!,
                                 size: 18,
                                 color: AppColors.indicatorActive,
                               )),
@@ -210,15 +243,15 @@ class AttractionDetail extends StatelessWidget {
                         size: 18,
                         weight: FontWeight.w700,
                       ),
-                      phoneNumber == ''
+                      site.phoneNumber == ''
                           ? MyText(
                               text: 'not available',
                               size: 18,
                             )
                           : GestureDetector(
-                              onTap: () => _makePhoneCall(phoneNumber),
+                              onTap: () => _makePhoneCall(site.phoneNumber!),
                               child: MyText(
-                                text: phoneNumber,
+                                text: site.phoneNumber!,
                                 size: 18,
                                 color: AppColors.indicatorActive,
                               )),
@@ -232,7 +265,7 @@ class AttractionDetail extends StatelessWidget {
                   ),
                   // Horizontal scrollable list of additional images
                   SizedBox(
-                    height: 100, // Set a fixed height for the horizontal list
+                    height: 150, // Set a fixed height for the horizontal list
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: additionalImages.length,
@@ -251,8 +284,7 @@ class AttractionDetail extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.only(right: 8.0),
                               child: Container(
-                                width:
-                                    100, // Set a fixed width for the containers
+                                width: 150,
                                 padding: const EdgeInsets.all(
                                     4.0), // Padding inside the container
                                 decoration: BoxDecoration(
@@ -266,7 +298,8 @@ class AttractionDetail extends StatelessWidget {
                                       8.0), // Match with the container
                                   child: Image.network(
                                     additionalImages[index],
-                                    width:
+                                    width: double.infinity,
+                                    height:
                                         double.infinity, // Fill the container
                                     fit: BoxFit
                                         .cover, // Ensure the image covers the area
@@ -290,15 +323,7 @@ class AttractionDetail extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.all(8), // Full width
             child: TextButton(
-              onPressed: () {
-                // Navigate to the map page with location details
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ExploreScreen(site: site),
-                  ),
-                );
-              },
+              onPressed: _launchMap,
               style: TextButton.styleFrom(
                 backgroundColor: AppColors.indicatorActive,
                 textStyle: TextStyle(fontSize: 18), // Text style

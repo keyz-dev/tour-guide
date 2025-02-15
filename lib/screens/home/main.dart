@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:tour_aid/components/my_text.dart';
 import 'package:tour_aid/screens/home/addAttraction.dart';
@@ -87,10 +88,52 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Future<void> _launchMap() async {
+    // Check for location permission
+    var status = await Permission.location.status;
+
+    if (status.isDenied) {
+      // Request permission
+      status = await Permission.location.request();
+    }
+
+    if (status.isGranted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ExploreScreen(),
+        ),
+      );
+    } else {
+      // Show an alert dialog
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Location Permission Required'),
+            content: Text('Please enable location permission to view the map'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
   Widget buildNavBarItem(
       IconData icon, Widget screen, String label, int index) {
     return MaterialButton(
       onPressed: () {
+        // Check if they're launching the map page
+        if (index == 1) {
+          _launchMap();
+        }
         setState(() {
           currentScreen = screen;
           currentTab = index;

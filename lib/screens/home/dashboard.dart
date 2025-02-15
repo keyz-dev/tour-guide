@@ -28,7 +28,6 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
-    final String title = "Explore";
 
     return Scaffold(
         body: SafeArea(
