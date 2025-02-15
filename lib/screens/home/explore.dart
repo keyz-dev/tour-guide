@@ -32,10 +32,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
     if (widget.site != null) {
       _site = widget.site;
-    } else {
-      fetchAttractionSites();
     }
-    setMarkers();
+    fetchAttractionSites();
   }
 
   // Set the markers
@@ -67,6 +65,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
     setState(() {
       attractionSites = ListOfAttractionSites;
+      setMarkers();
     });
   }
 
@@ -76,6 +75,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
   @override
   void dispose() {
+    attractionSites.clear();
     _mapController = Completer();
     super.dispose();
   }

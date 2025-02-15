@@ -88,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<void> _launchMap() async {
+  Future<void> _launchMap(Widget screen) async {
     // Check for location permission
     var status = await Permission.location.status;
 
@@ -98,13 +98,11 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     if (status.isGranted) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ExploreScreen(),
-        ),
-      );
-    } else {
+      setState(() {
+        currentScreen = screen;
+        currentTab = 1;
+      });
+    } else if (status.isDenied) {
       // Show an alert dialog
       showDialog(
         context: context,
@@ -123,6 +121,9 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         },
       );
+    } else if (status.isPermanentlyDenied) {
+      // Permission is permanently denied, open app settings
+      openAppSettings();
     }
   }
 
@@ -132,12 +133,13 @@ class _HomeScreenState extends State<HomeScreen> {
       onPressed: () {
         // Check if they're launching the map page
         if (index == 1) {
-          _launchMap();
+          _launchMap(screen);
+        } else {
+          setState(() {
+            currentScreen = screen;
+            currentTab = index;
+          });
         }
-        setState(() {
-          currentScreen = screen;
-          currentTab = index;
-        });
       },
       minWidth: 40,
       child: Column(

@@ -47,7 +47,7 @@ class AttractionDetail extends StatelessWidget {
             builder: (context) => ExploreScreen(site: site),
           ),
         );
-      } else {
+      } else if (status.isDenied) {
         // Show an alert dialog
         showDialog(
           context: context,
@@ -68,6 +68,8 @@ class AttractionDetail extends StatelessWidget {
           },
         );
         Navigator.pop(context);
+      } else if (status.isPermanentlyDenied) {
+        openAppSettings();
       }
     }
 
