@@ -131,189 +131,193 @@ class AttractionDetail extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: Positioned(
-            top: MediaQuery.of(context).size.height / 2,
-            left: 0,
-            right: 0,
-            child: Container(
-              padding: const EdgeInsets.all(16.0),
-              color: Colors.white,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 20,
-                children: [
-                  Column(
-                    spacing: 8,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Name
-                      MyText(
-                        text: site.name,
-                        size: 28,
-                        weight: FontWeight.w700,
-                      ),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              spacing: 8,
-                              children: [
-                                Icon(
-                                  Icons.location_on,
-                                  size: 18,
-                                  color: Colors.redAccent[400],
-                                ),
-                                MyText(
-                                  text: site.town,
-                                  size: 18,
-                                  color: Colors.grey,
-                                )
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              spacing: 8,
-                              children: [
-                                Icon(Icons.star,
-                                    color: Colors.yellow, size: 14),
-                                MyText(
-                                    text: site.rating.toString(),
-                                    color: AppColors.primaryGrey,
-                                    size: 14,
-                                    weight: FontWeight.bold),
-                              ],
-                            )
-                          ]),
-                    ],
-                  ),
+          child: SingleChildScrollView(
+            child: Positioned(
+              top: MediaQuery.of(context).size.height / 2,
+              left: 0,
+              right: 0,
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                color: Colors.white,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 20,
+                  children: [
+                    Column(
+                      spacing: 8,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Name
+                        MyText(
+                          text: site.name,
+                          size: 28,
+                          weight: FontWeight.w700,
+                        ),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                spacing: 8,
+                                children: [
+                                  Icon(
+                                    Icons.location_on,
+                                    size: 18,
+                                    color: Colors.redAccent[400],
+                                  ),
+                                  MyText(
+                                    text: site.town,
+                                    size: 18,
+                                    color: Colors.grey,
+                                  )
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                spacing: 8,
+                                children: [
+                                  Icon(Icons.star,
+                                      color: Colors.yellow, size: 14),
+                                  MyText(
+                                      text: site.rating.toString(),
+                                      color: AppColors.primaryGrey,
+                                      size: 14,
+                                      weight: FontWeight.bold),
+                                ],
+                              )
+                            ]),
+                      ],
+                    ),
 
-                  // Description
+                    // Description
 
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 8,
-                    children: [
-                      MyText(
-                        text: "Description",
-                        size: 18,
-                        weight: FontWeight.w700,
-                      ),
-                      MyText(
-                        text: site.description,
-                        size: 16,
-                        height: 1.8,
-                        color: const Color.fromARGB(255, 127, 125, 125),
-                      )
-                    ],
-                  ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 8,
+                      children: [
+                        MyText(
+                          text: "Description",
+                          size: 18,
+                          weight: FontWeight.w700,
+                        ),
+                        MyText(
+                          text: site.description,
+                          size: 16,
+                          height: 1.8,
+                          color: const Color.fromARGB(255, 127, 125, 125),
+                        )
+                      ],
+                    ),
 
-                  // Website URL
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    spacing: 8,
-                    children: [
-                      MyText(
-                        text: "Website:",
-                        size: 18,
-                        weight: FontWeight.w700,
-                      ),
-                      site.websiteUrl == ''
-                          ? MyText(
-                              text: 'not available',
-                              size: 18,
-                            )
-                          : GestureDetector(
-                              onTap: () => _launchURL(site.websiteUrl!),
-                              child: MyText(
-                                text: site.websiteUrl!,
+                    // Website URL
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      spacing: 8,
+                      children: [
+                        MyText(
+                          text: "Website:",
+                          size: 18,
+                          weight: FontWeight.w700,
+                        ),
+                        site.websiteUrl == ''
+                            ? MyText(
+                                text: 'not available',
                                 size: 18,
-                                color: AppColors.indicatorActive,
-                              )),
-                    ],
-                  ),
-                  // Phone number
+                              )
+                            : GestureDetector(
+                                onTap: () => _launchURL(site.websiteUrl!),
+                                child: MyText(
+                                  text: site.websiteUrl!,
+                                  size: 18,
+                                  color: AppColors.indicatorActive,
+                                  overFlow: TextOverflow.ellipsis,
+                                )),
+                      ],
+                    ),
+                    // Phone number
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    spacing: 8,
-                    children: [
-                      MyText(
-                        text: "Phone:",
-                        size: 18,
-                        weight: FontWeight.w700,
-                      ),
-                      site.phoneNumber == ''
-                          ? MyText(
-                              text: 'not available',
-                              size: 18,
-                            )
-                          : GestureDetector(
-                              onTap: () => _makePhoneCall(site.phoneNumber!),
-                              child: MyText(
-                                text: site.phoneNumber!,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      spacing: 8,
+                      children: [
+                        MyText(
+                          text: "Phone:",
+                          size: 18,
+                          weight: FontWeight.w700,
+                        ),
+                        site.phoneNumber == ''
+                            ? MyText(
+                                text: 'not available',
                                 size: 18,
-                                color: AppColors.indicatorActive,
-                              )),
-                    ],
-                  ),
+                              )
+                            : GestureDetector(
+                                onTap: () => _makePhoneCall(site.phoneNumber!),
+                                child: MyText(
+                                  text: site.phoneNumber!,
+                                  size: 18,
+                                  color: AppColors.indicatorActive,
+                                )),
+                      ],
+                    ),
 
-                  // Additional images
-                  Text(
-                    "Better View",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  // Horizontal scrollable list of additional images
-                  SizedBox(
-                    height: 150, // Set a fixed height for the horizontal list
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: additionalImages.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                            onTap: () {
-                              // Navigate to the full-screen image when tapped
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => FullImageScreen(
-                                      imageUrl: additionalImages[index]),
-                                ),
-                              );
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
-                              child: Container(
-                                width: 150,
-                                padding: const EdgeInsets.all(
-                                    4.0), // Padding inside the container
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                      8.0), // Optional: Rounded corners
-                                  color: Colors.grey[
-                                      200], // Background color for the container
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(
-                                      8.0), // Match with the container
-                                  child: Image.network(
-                                    additionalImages[index],
-                                    width: double.infinity,
-                                    height:
-                                        double.infinity, // Fill the container
-                                    fit: BoxFit
-                                        .cover, // Ensure the image covers the area
+                    // Additional images
+                    Text(
+                      "Better View",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    // Horizontal scrollable list of additional images
+                    SizedBox(
+                      height: 150, // Set a fixed height for the horizontal list
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: additionalImages.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                              onTap: () {
+                                // Navigate to the full-screen image when tapped
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FullImageScreen(
+                                        imageUrl: additionalImages[index]),
+                                  ),
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 8.0),
+                                child: Container(
+                                  width: 150,
+                                  padding: const EdgeInsets.all(
+                                      4.0), // Padding inside the container
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                        8.0), // Optional: Rounded corners
+                                    color: Colors.grey[
+                                        200], // Background color for the container
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(
+                                        8.0), // Match with the container
+                                    child: Image.network(
+                                      additionalImages[index],
+                                      width: double.infinity,
+                                      height:
+                                          double.infinity, // Fill the container
+                                      fit: BoxFit
+                                          .cover, // Ensure the image covers the area
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ));
-                      },
+                              ));
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

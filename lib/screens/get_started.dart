@@ -3,7 +3,6 @@ import 'package:tour_aid/components/elevated_button.dart';
 import 'package:tour_aid/components/my_text.dart';
 import 'package:tour_aid/screens/auth/login.dart';
 import 'package:tour_aid/screens/auth/register.dart';
-import 'package:tour_aid/screens/home/main.dart';
 import 'package:tour_aid/utils/colors.dart';
 
 import '../components/text_button.dart';
@@ -48,7 +47,7 @@ class GetStarted extends StatelessWidget {
                         ),
                         MyText(
                           text:
-                          "Login or continue as guest to find out what attractive sites lie ahead to explore",
+                              "Login or continue as guest to find out what attractive sites lie ahead to explore",
                           size: 17,
                           height: 1.5,
                           color: AppColors.primaryGrey,
@@ -62,9 +61,7 @@ class GetStarted extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const Login()
-                                )
-                            );
+                                    builder: (context) => const Login()));
                           },
                           radius: 4.0,
                           width: double.infinity,
@@ -74,8 +71,7 @@ class GetStarted extends StatelessWidget {
                               color: AppColors.primaryWhite,
                               weight: FontWeight.w600,
                               align: TextAlign.center,
-                              size: 17
-                          ),
+                              size: 17),
                         ),
                         const SizedBox(
                           height: 15,
@@ -85,33 +81,25 @@ class GetStarted extends StatelessWidget {
                             color: AppColors.primaryBlack,
                             weight: FontWeight.w600,
                             align: TextAlign.center,
-                            size: 15
-                        ),
+                            size: 15),
                         MyTextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Register()
-                                )
-                            );
-                          },
-                          width: MediaQuery.of(context).size.width * .9,
-                          margin: const EdgeInsets.symmetric(vertical: 20),
-                          borderRadius: 5.0,
-                          borderSide:  BorderSide(color: AppColors.inputBorderColor, width: 1.0),
-                          child: MyText(
-                            text: "Create an Account",
-                            size: 17,
-                            weight: FontWeight.w700,
-                            color: AppColors.primaryGrey
-                          )
-                        )
-                      ]
-                  )
-              )
-            ])
-        )
-    );
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const Register()));
+                            },
+                            width: MediaQuery.of(context).size.width * .9,
+                            margin: const EdgeInsets.symmetric(vertical: 20),
+                            borderRadius: 5.0,
+                            borderSide: BorderSide(
+                                color: AppColors.inputBorderColor, width: 1.0),
+                            child: MyText(
+                                text: "Create an Account",
+                                size: 17,
+                                weight: FontWeight.w700,
+                                color: AppColors.primaryGrey))
+                      ]))
+            ])));
   }
 }

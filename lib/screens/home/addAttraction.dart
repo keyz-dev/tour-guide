@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 import 'package:tour_aid/components/elevated_button.dart';
 import 'package:tour_aid/components/my_text.dart';
 import 'package:tour_aid/components/text_field.dart';
@@ -10,7 +9,6 @@ import 'package:tour_aid/screens/home/main.dart';
 import 'package:tour_aid/services/attractions.dart';
 import 'package:tour_aid/services/cloudinary.dart';
 import 'package:tour_aid/utils/colors.dart';
-import '../../utils/userProvider.dart';
 
 class AddAttractionScreen extends StatefulWidget {
   const AddAttractionScreen({super.key});
@@ -99,6 +97,7 @@ class _AddAttractionScreenState extends State<AddAttractionScreen> {
           .showSnackBar(SnackBar(content: Text('Attraction site added!')));
       _formKey.currentState!.reset();
       setState(() {
+        _attractionSite.additionalImages.clear();
         _primaryImage = null;
         _additionalImages.clear();
       });
