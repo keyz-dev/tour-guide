@@ -22,7 +22,7 @@ class MyTextField extends StatelessWidget {
   final bool hasBorder;
   final bool readOnly;
 
-  MyTextField({
+  const MyTextField({
     super.key,
     this.controller,
     this.labelText,
@@ -84,6 +84,4 @@ class MyTextField extends StatelessWidget {
       readOnly: readOnly,
     );
   }
-
-
 }

@@ -235,10 +235,10 @@ class _RegisterState extends State<Register> {
                         MyTextField(
                           hintText: "confirm password",
                           labelText: "Confirm Password",
-                          obscureText: true,
                           icon: Icons.lock,
-                          controller: _cPasswordController,
                           fillColor: AppColors.indicatorInActive,
+                          obscureText: true,
+                          controller: _cPasswordController,
                           validator: (value) {
                             return (value != _passwordController.text)
                                 ? 'passwords do not match'
